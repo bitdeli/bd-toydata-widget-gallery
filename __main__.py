@@ -1,33 +1,18 @@
 # Hello world!
 #
-# This board serves as reference and a live demo for all the features
+# This board serves as reference and a live demo for all the widgets
 # currently available in Bitdeli scripts.
-#
-# Something broken or missing? Help us improve the documentation for
-# everybody by letting us know at team@bitdeli.com
 
 # The bitdeli module contains all the functionality for accessing the
 # data and creating the widgets
 import bitdeli
-from bitdeli import Widget
+from bitdeli.widgets import *
 
 # Feel free to use any modules in the Python Standard Library
 import random
 from datetime import date, datetime, timedelta
 from collections import Counter
 from operator import attrgetter
-
-
-# TODO: move to widgets.py
-class Timeline(Widget):
-    defaults = {'size': [3,3]}
-
-class Line(Widget):
-    defaults = {'size': [3,3]}
-
-class Users(Widget):
-    defaults = {'size': [3,3]}
-
 
 # The set_theme method changes the color theme of the board. Each
 # theme contains a background color and three foreground colors. To
@@ -127,11 +112,10 @@ for profile in bitdeli.profiles():
 # data:   a dictionary where keys are 2-letter country codes
 #         (ISO 3166-1 alpha-2) and values are numbers
 
-bitdeli.Map(label='Revenue by country',
-            data=countries,
-            size=[5,4],
-            color=3)
-
+Map(label='Revenue by country',
+    data=countries,
+    size=[5,4],
+    color=3)
 
 # Widget group:
 # bitdeli.Group(options)
@@ -151,8 +135,7 @@ bitdeli.Map(label='Revenue by country',
 
 # This group is used to make sure that the following line and bar
 # charts stay together in the board layout
-daily_group = bitdeli.Group(layout="vertical")
-
+daily_group = Group(layout="vertical")
 
 # Prepare data for the line widget
 def get_line_data(sales):
@@ -205,16 +188,14 @@ Line(label='Revenue for past 30 days',
 #         label is the label for each bar on the x-axis
 #         value is a number determining the height of the bar
 
-bitdeli.Bar(label='% of beer sales from revenue',
-            data=[(d, float(daily_beer[d])/daily_sales[d]*100)
-                  for d in days],
-            size=[5,2],
-            group=daily_group)
-
+Bar(label='% of beer sales from revenue',
+    data=[(d, float(daily_beer[d])/daily_sales[d]*100)
+          for d in days],
+    size=[5,2],
+    group=daily_group)
 
 # Another group for showing top products (text widgets)
 top_group = bitdeli.Group(layout="vertical")
-
 
 # Text widget:
 # bitdeli.Text(options)
@@ -227,17 +208,17 @@ top_group = bitdeli.Group(layout="vertical")
 # text:    a string that will be shown as a normal-sized paragraph
 #          below the heading
 
-bitdeli.Text(label='Top selling product',
-             head=sales.most_common(1)[0][0],
-             color=3,
-             size=[4,1],
-             group=top_group)
+Text(label='Top selling product',
+     head=sales.most_common(1)[0][0],
+     color=3,
+     size=[4,1],
+     group=top_group)
 
-bitdeli.Text(label='Most returns',
-             head=returns.most_common(1)[0][0],
-             color=2,
-             size=[4,1],
-             group=top_group)
+Text(label='Most returns',
+     head=returns.most_common(1)[0][0],
+     color=2,
+     size=[4,1],
+     group=top_group)
 
 feedback_tot = dict( (p, feedback_pos.get(p, 0)-
                          feedback_neg.get(p, 0))
@@ -245,18 +226,18 @@ feedback_tot = dict( (p, feedback_pos.get(p, 0)-
 feedback_tot = Counter(feedback_tot)
 most_liked = feedback_tot.most_common(1)[0][0]
 
-bitdeli.Text(label='Most liked product',
-             head=most_liked,
-             color=1,
-             size=[4,1],
-             group=top_group)
+Text(label='Most liked product',
+     head=most_liked,
+     color=1,
+     size=[4,1],
+     group=top_group)
 
-bitdeli.Text(label='Most liked product',
-             text=( "%d positive\n%d negative" %
-                   (feedback_pos.get(most_liked, 0),
-                    feedback_neg.get(most_liked, 0)) ),
-             size=[4,1],
-             group=top_group)
+Text(label='Most liked product',
+     text="%d positive\n%d negative" %\
+          (feedback_pos.get(most_liked, 0),
+           feedback_neg.get(most_liked, 0)),
+     size=[4,1],
+     group=top_group)
 
 
 # Prepare data for the customers table
@@ -298,12 +279,11 @@ def get_table_data():
 #         normalized between 0 and 1.
 #         ("bar" is the only type currently supported)
 
-bitdeli.Table(label='Top 10 customers by sales',
-              data=list(get_table_data())[:10],
-              chart={"Sales (rel)": "bar"},
-              color=2,
-              size=[8,4])
-
+Table(label='Top 10 customers by sales',
+      data=list(get_table_data())[:10],
+      chart={"Sales (rel)": "bar"},
+      color=2,
+      size=[8,4])
 
 # Prepare data for the timeline and users widgets
 gravatar_users = [u for u in customers if 'gravatar' in u]
@@ -317,10 +297,8 @@ def get_join_event(user):
 
 join_events = [get_join_event(u) for u in gravatar_users]
 
-
 # Empty widgets can be used as spacers
-bitdeli.Widget(size=[12,1])
-
+Widget(size=[12,1])
 
 # Timeline widget:
 # bitdeli.Timeline(options)
